@@ -1,45 +1,59 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 
-const Heatmap = ({ model, heatmapData }) => {
- 
+const Heatmap = ({ model, heatmapData, csvData }) => {
   const material = useMemo(() => {
-    const geometry = model.children[0].geometry;
+    if (!model || !model.children || !model.children[0].geometry) {
+      console.error("Model or geometry not available yet.");
+      return null;
+    }
 
-    const colors = [
-      ...Array(geometry.attributes.position.count).fill(0xffffff)
-    ];
+    const geometry = model.children[0].geometry;
+    const colors = [];
     const positions = geometry.attributes.position;
-    const isPointInRegion = (x, z) => {
-        const region = {
-          name: "Tracker",
-          minX: -108.8917,
-          maxX: 84.31494,
-          minZ: -36.81385,
-          maxZ: 127.0695
-        };
-      
-        return x >= region.minX && x <= region.maxX && z >= region.minZ && z <= region.maxZ;
-      };
-      
+
+    if (!positions) {
+      console.error("Position attributes not found in geometry.");
+      return null;
+    }
+
+    // Define a region for the heatmap
+    const isPointInRegion = (x, z, posX, posZ) => {
+      // Adjust the region to use csvData positions instead of fixed values
+      return x === posX && z === posZ;
+    };
+
+    // Iterate over the geometry positions
     for (let i = 0; i < positions.count; i++) {
-      const x = positions.getX(i); 
+      const x = positions.getX(i);
       const z = positions.getZ(i);
 
+      // Set default color (white)
       let color = new THREE.Color(0xffffff);
 
-      if (isPointInRegion(x, z)) {
-        // Map heatmap value to the region
-        const value = heatmapData[i] || 0; // Heatmap value for this point
-        color.setHSL(0.7 - value * 0.7, 1.0, 0.5); // Heatmap coloring based on value
+      // Find the matching position from csvData
+      const matchingPoint = csvData.find((point) =>
+        isPointInRegion(x, z, parseFloat(point.POSX), parseFloat(point.POSZ))
+      );
+
+      if (matchingPoint) {
+        // Get heatmap value corresponding to this point
+        const value = heatmapData[i] || 0; // Assuming heatmapData matches csvData in length or adapt as needed
+        color.setHSL(0.7 - value * 0.7, 1.0, 0.5); // Apply color based on heatmap value
       }
 
+      // Push color to colors array
       colors.push(color.r, color.g, color.b);
     }
 
-    geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3)); // Apply color to vertices
+    // Apply vertex colors to the geometry
+    geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+
+    // Return the material with vertex colors enabled
     return new THREE.MeshBasicMaterial({ vertexColors: true });
-  }, [heatmapData]);
+  }, [heatmapData, csvData, model]);
+
+  if (!material) return null; // Return nothing if material is not ready
 
   return <mesh material={material} geometry={model.children[0].geometry} />;
 };
