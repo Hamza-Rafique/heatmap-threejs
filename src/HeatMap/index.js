@@ -2,12 +2,13 @@ import { useMemo } from "react";
 import * as THREE from "three";
 
 const Heatmap = ({ model, heatmapData }) => {
-  // Use the model and heatmapData as before
+ 
   const material = useMemo(() => {
-    const geometry = model.children[0].geometry; // Get geometry of the model
+    const geometry = model.children[0].geometry;
 
-    // Initialize color array
-    const colors = [];
+    const colors = [
+      ...Array(geometry.attributes.position.count).fill(0xffffff)
+    ];
     const positions = geometry.attributes.position;
     const isPointInRegion = (x, z) => {
         const region = {
@@ -22,10 +23,10 @@ const Heatmap = ({ model, heatmapData }) => {
       };
       
     for (let i = 0; i < positions.count; i++) {
-      const x = positions.getX(i); // X position
-      const z = positions.getZ(i); // Z position
+      const x = positions.getX(i); 
+      const z = positions.getZ(i);
 
-      let color = new THREE.Color(0xffffff); // Default color (white)
+      let color = new THREE.Color(0xffffff);
 
       if (isPointInRegion(x, z)) {
         // Map heatmap value to the region
