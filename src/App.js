@@ -4,13 +4,14 @@ import { OrbitControls } from "@react-three/drei";
 import Papa from "papaparse";
 import Model from "./Modal";
 import Heatmap from "./HeatMap";
-import glbpath from "./assets/underground_parking_lot.glb";
+import glbpath from "./assets/MainScene/MainScene.glb";
 
 const App = () => {
   const glbPath = glbpath;
   const [csvData, setCsvData] = useState([]);
 
   const heatmapData = new Array(1000).fill(Math.random());
+
   const modelRef = React.useRef();
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const App = () => {
       Papa.parse(csvText, {
         header: true,
         complete: (results) => {
-          setCsvData(results.data);  // Store the parsed CSV data
+          setCsvData(results.data);
         },
       });
     };
@@ -36,13 +37,12 @@ const App = () => {
     loadCSV();
   }, []);
 
-  console.log(csvData, 'csvData')
-
+console.log(modelRef.current, modelRef, csvData,'modelRef.current')
   return (
     <div style={{ height: "100vh" }}>
     <Canvas>
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
+      {/* <ambientLight intensity={5} /> */}
+      {/* <pointLight position={[50, 50, 50]} /> */}
       <Suspense fallback={null}>
         <Model glbPath={glbPath} ref={modelRef} />
         {modelRef.current && csvData.length > 0 && (

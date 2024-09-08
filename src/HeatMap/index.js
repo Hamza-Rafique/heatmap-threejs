@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import * as THREE from "three";
 
 const Heatmap = ({ model, heatmapData, csvData }) => {
+  console.log(model, 'model')
   const material = useMemo(() => {
     if (!model || !model.children || !model.children[0].geometry) {
       console.error("Model or geometry not available yet.");
@@ -9,7 +10,7 @@ const Heatmap = ({ model, heatmapData, csvData }) => {
     }
 
     const geometry = model.children[0].geometry;
-    const colors = [];
+    const colors = [ ];
     const positions = geometry.attributes.position;
 
     if (!positions) {
@@ -17,36 +18,28 @@ const Heatmap = ({ model, heatmapData, csvData }) => {
       return null;
     }
 
-    // Define a region for the heatmap
     const isPointInRegion = (x, z, posX, posZ) => {
-      // Adjust the region to use csvData positions instead of fixed values
       return x === posX && z === posZ;
     };
 
-    // Iterate over the geometry positions
     for (let i = 0; i < positions.count; i++) {
       const x = positions.getX(i);
       const z = positions.getZ(i);
 
-      // Set default color (white)
       let color = new THREE.Color(0xffffff);
-
-      // Find the matching position from csvData
       const matchingPoint = csvData.find((point) =>
         isPointInRegion(x, z, parseFloat(point.POSX), parseFloat(point.POSZ))
       );
 
       if (matchingPoint) {
-        // Get heatmap value corresponding to this point
-        const value = heatmapData[i] || 0; // Assuming heatmapData matches csvData in length or adapt as needed
-        color.setHSL(0.7 - value * 0.7, 1.0, 0.5); // Apply color based on heatmap value
+        const value = heatmapData[i] || 0;
+        color.setHSL(0.7 - value * 0.7, 1.0, 0.5);
       }
 
       // Push color to colors array
       colors.push(color.r, color.g, color.b);
     }
 
-    // Apply vertex colors to the geometry
     geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
 
     // Return the material with vertex colors enabled
