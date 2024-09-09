@@ -16,7 +16,9 @@ https://community.cesium.com/t/applying-colored-heatmaps-to-buildings-as-3d-tile
 It should feel and look like provided screenshot
 POSX and POZ is cords which u need to use
 
-This GLB has a region of  
+This GLB has a region of 
+
+```python
 "regions" : [
         {
             "name" : "Tracker",
@@ -26,6 +28,7 @@ This GLB has a region of
             "maxZ" : "127.0695"
         }
     ]
+```
 
 in provided screenshot u can see 2D map with same positions
 
