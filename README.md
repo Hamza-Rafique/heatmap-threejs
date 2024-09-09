@@ -14,6 +14,20 @@ https://community.cesium.com/t/applying-colored-heatmaps-to-buildings-as-3d-tile
 - Implement heatmap on GLB file from data given
 - Should not be tide to one GLB, so logic should be any GLB and the data from that scene
 It should feel and look like provided screenshot
+POSX and POZ is cords which u need to use
+
+This GLB has a region of  
+"regions" : [
+        {
+            "name" : "Tracker",
+            "minX" : "-108.8917",
+            "maxX" : "84.31494",
+            "minZ" : "-36.81385",
+            "maxZ" : "127.0695"
+        }
+    ]
+
+in provided screenshot u can see 2D map with same positions
 
 <img width="794" alt="Screenshot 2024-09-07 at 17 06 41" src="https://github.com/user-attachments/assets/37812c72-7a29-4b26-a3c7-ac162a0e8385">
 
