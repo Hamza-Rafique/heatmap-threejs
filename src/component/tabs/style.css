@@ -1,0 +1,39 @@
+/* Tabs container style */
+.tabs-container {
+  color: #333;
+  gap: 0px; /* No gap between tabs */
+  border-radius: 4.91px 0px 0px 0px; /* Rounded top-left corner */
+  display: flex; /* To align the tabs horizontally */
+  flex-direction: row; /* Ensure the tabs are side by side */
+  background-color: #f5f5f5; /* Optional background color */
+}
+
+/* Active tab style */
+.tab {
+  padding: 12px 8px 12px 8px; 
+  gap: 0px; 
+  border-radius: 6.93px 0px 0px 0px; 
+  border: 0.5px solid transparent; 
+  display: flex; /* Ensure content inside the tab is aligned properly */
+  justify-content: center; /* Center align the text inside the tab */
+  align-items: center; /* Vertically center the text */
+  cursor: pointer; /* Show pointer on hover */
+  transition: opacity 0.3s ease, background-color 0.3s ease; /* Smooth transition for hover/active effects */
+}
+
+/* Tab hover and active state */
+.tab:hover,
+.tab.active {
+  background-color: #fff; /* Change background when active or hovered */
+  opacity: 1; /* Visible on hover/active */
+  border-color: #ccc; /* Optional: Border for active state */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Box shadow for active state */
+}
+
+/* Optional: Additional styling for New Testament and Old Testament tabs */
+.tab.new-testament,
+.tab.old-testament {
+  font-size: 14px; /* Adjust the font size */
+  font-weight: bold; /* Bold text */
+  color: #333; /* Default text color */
+}

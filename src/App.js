@@ -4,7 +4,7 @@ import { OrbitControls } from "@react-three/drei";
 import Papa from "papaparse";
 import Model from "./Modal";
 import Heatmap from "./heatmapcom";
-import glbpath from "./assets/Duck.glb";
+import glbpath from "./assets/MainScene/MainScene.glb";
 
 const App = () => {
   const glbPath = glbpath;
