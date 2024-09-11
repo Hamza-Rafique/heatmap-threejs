@@ -10,7 +10,6 @@ import glbpath from "./assets/MainScene/MainScene.glb";
 const App = () => {
   const glbPath = glbpath;
   const [csvData, setCsvData] = useState([]);
-  const [heatmapData, setHeatmapData] = useState([]);
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const modelRef = React.useRef();
 
