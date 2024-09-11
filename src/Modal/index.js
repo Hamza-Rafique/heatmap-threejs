@@ -1,11 +1,24 @@
+import React, { useEffect, useImperativeHandle, forwardRef } from "react";
 import { useGLTF } from "@react-three/drei";
-import React from "react";
 
+const Model = forwardRef(({ glbPath, onLoad }, ref) => {
+  const { scene } = useGLTF(glbPath);
 
-const Model = React.forwardRef(({ glbPath }, ref) => {
-    const { scene } = useGLTF(glbPath);
-    React.useImperativeHandle(ref, () => ({ scene }));
-    return <primitive object={scene} />;
-  });
+  useEffect(() => {
+    if (scene) {
+      if (ref && typeof ref === "function") {
+        ref({ scene });
+      } else if (ref) {
+        ref.current = { scene };
+      }
 
-  export default Model
+      if (onLoad) {
+        onLoad({ scene });
+      }
+    }
+  }, [scene, onLoad, ref]);
+
+  return <primitive object={scene} />;
+});
+
+export default Model;
