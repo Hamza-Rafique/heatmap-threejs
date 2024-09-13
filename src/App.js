@@ -6,7 +6,6 @@ import Model from "./Modal";
 import Heatmap from "./heatmapcom";
 import glbpath from "./assets/MainScene/MainScene.glb";
 
-
 const App = () => {
   const glbPath = glbpath;
   const [csvData, setCsvData] = useState([]);
