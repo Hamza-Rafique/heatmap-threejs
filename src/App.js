@@ -16,8 +16,6 @@ const App = () => {
     const loadCSV = async () => {
       try {
         const response = await fetch("/raw_data.csv");
-
-        // Check if the response is valid
         if (!response.ok) {
           throw new Error(
             `Error fetching the CSV file: ${response.statusText}`
@@ -29,8 +27,6 @@ const App = () => {
         const decoder = new TextDecoder("utf-8");
         const csvText = decoder.decode(result.value);
 
-        // Log the raw CSV data for debugging
-        console.log(csvText);
 
         Papa.parse(csvText, {
           header: true,
@@ -48,7 +44,6 @@ const App = () => {
     loadCSV();
   }, []);
 
-  console.log(csvData, "csvData");
 
   const handleModelLoad = (model) => {
     console.log("Model loaded in App.js:", model);
@@ -57,8 +52,9 @@ const App = () => {
 
   return (
     <div style={{ height: "100vh" }}>
-      <Canvas>
-        <ambientLight intensity={0.5} />
+      <Canvas camera={{ position: [0, 50, 100], fov: 60 }}>
+        <ambientLight />
+        <pointLight position={[10, 10, 10]} />
         <Suspense fallback={null}>
           <Model glbPath={glbPath} ref={modelRef} onLoad={handleModelLoad} />
           {isModelLoaded && <Heatmap heatmapData={csvData} />}

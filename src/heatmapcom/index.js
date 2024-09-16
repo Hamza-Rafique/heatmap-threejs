@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import * as THREE from "three";
 import { Plane } from "@react-three/drei";
 
@@ -10,40 +10,39 @@ const region = {
 };
 
 const Heatmap = ({ heatmapData }) => {
-  console.log(heatmapData, "heatmapData");
+  const data = heatmapData;
+  const width = Math.abs(region.maxX - region.minX); 
+  const height = Math.abs(region.maxZ - region.minZ); 
+  const colorScale = new THREE.Color();
 
-  const width = Math.abs(region.maxX - region.minX);
-  const height = Math.abs(region.maxZ - region.minZ);
+  const heatmap = useMemo(() => {
+    return data.map((point, index) => {
+      const normalizedX =
+        region.minX +
+        ((point.POSX - 0) / (10 - 0)) * (region.maxX - region.minX);
+      const normalizedZ =
+        region.minZ +
+        ((point.POSZ - 0) / (10 - 0)) * (region.maxZ - region.minZ); 
+      const intensity = point.NPOSX / 150; 
+      const color = colorScale.setHSL(0.7 * (1 - intensity), 1, 0.5).getHex();
 
-  const dataArray = new Uint8Array(width * height * 3); // For RGB
-
-  heatmapData.forEach(({ POSX, NPOSX, POSZ, NPOSZ }) => {
-    const x = ((POSX - region.minX) / width) * (width - 1);
-    const y = ((POSZ - region.minZ) / height) * (height - 1);
-
-    const index = Math.floor(y) * width + Math.floor(x);
-    const i = index * 3;
-
-    const value = (POSZ + NPOSZ) / 2; // Example value calculation
-
-    dataArray[i] = value; // Red
-    dataArray[i + 1] = value; // Green
-    dataArray[i + 2] = 0; // Blue (set to 0 for now)
-  });
-
-  const heatmapTexture = new THREE.DataTexture(
-    dataArray,
-    width,
-    height,
-    THREE.RGBFormat
-  );
-
-  heatmapTexture.needsUpdate = true;
+      return (
+        <mesh key={index} position={[normalizedX, 0.5, normalizedZ]}>
+          <boxGeometry args={[2, 2, 2]} />
+          <meshBasicMaterial color={color} />
+        </mesh>
+      );
+    });
+  }, [data]);
 
   return (
-    <Plane args={[width, height]} position={[0, 0, 0]}>
-      <meshBasicMaterial map={heatmapTexture} transparent />
-    </Plane>
+    <>
+      <Plane args={[width, height]} rotation={[-Math.PI / 2, 0, 0]}>
+        <meshBasicMaterial color="white" side={THREE.DoubleSide} />
+      </Plane>
+      {heatmap}
+
+    </>
   );
 };
 
