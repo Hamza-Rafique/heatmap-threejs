@@ -21,7 +21,6 @@ const App = () => {
             `Error fetching the CSV file: ${response.statusText}`
           );
         }
-
         const reader = response.body.getReader();
         const result = await reader.read();
         const decoder = new TextDecoder("utf-8");
@@ -33,7 +32,6 @@ const App = () => {
           dynamicTyping: true,
           complete: (results) => {
             setCsvData(results.data);
-            console.log("Parsed CSV Data:", results.data);
           },
         });
       } catch (error) {
@@ -46,7 +44,6 @@ const App = () => {
 
 
   const handleModelLoad = (model) => {
-    console.log("Model loaded in App.js:", model);
     setIsModelLoaded(true);
   };
 
