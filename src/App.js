@@ -16,7 +16,6 @@ const App = () => {
     const loadCSV = async () => {
       try {
         const response = await fetch("/raw_data.csv");
-
         if (!response.ok) {
           throw new Error(
             `Error fetching the CSV file: ${response.statusText}`
@@ -26,6 +25,8 @@ const App = () => {
         const result = await reader.read();
         const decoder = new TextDecoder("utf-8");
         const csvText = decoder.decode(result.value);
+
+
         Papa.parse(csvText, {
           header: true,
           dynamicTyping: true,
@@ -48,8 +49,9 @@ const App = () => {
 
   return (
     <div style={{ height: "100vh" }}>
-      <Canvas>
-        <ambientLight intensity={0.5} />
+      <Canvas camera={{ position: [0, 50, 100], fov: 60 }}>
+        <ambientLight />
+        <pointLight position={[10, 10, 10]} />
         <Suspense fallback={null}>
           <Model glbPath={glbPath} ref={modelRef} onLoad={handleModelLoad} />
           {isModelLoaded && <Heatmap heatmapData={csvData} />}
